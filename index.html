@@ -3,11 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mobster</title>
+    <script>
+      const getData = async url => {
+
+      };
+
+      const renderMembers = (mob) => {
+        const memberBoard = document.getElementById("member-board");
+        memberBoard.innerText = "";
+      
+        const headerEl = document.querySelector(".header");
+        headerEl.innerText = mob.name
+
+        mob.members.forEach(member => {
+          const pEl = document.createElement("p");
+          pEl.innerText = member.name;
+          memberBoard.appendChild(pEl);   
+        });
+      };
+
+      const handleOnChange = async () => {
+        const dropdown = document.getElementById("dropdown");
+        const value = dropdown.value;
+        const result = await fetch(`https://backend-production-398b.up.railway.app/api/v1/mobs`);
+        const data = await result.json();
+        const members = data.find(mob => mob.id === value);
+        renderMembers(members);
+      };
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const result = await fetch("https://backend-production-398b.up.railway.app/api/v1/mobs");
+        const data = await result.json();
+        
+
+        const header = document.querySelector(".header");
+        //header.innerText = "dddd"
+      })
+    </script>
   </head>
   <body>
-    <div id="app">Hej hej</div>
+    <div id="app">
+     <div class="header">Mobster
+      <select id="dropdown" onchange="handleOnChange()" name="favorite-mob" aria-label="Select your favorite mob..." required>
+        <option selected disabled value="">
+          Select your favorite mob...
+        </option>
+        <option value="1">Kåda</option>
+        <option value="2">Spicy</option>
+        <option value="3">Initite-Loopers</option>
+      </select>
+     </div> 
+     <div id="member-board">
+     </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
